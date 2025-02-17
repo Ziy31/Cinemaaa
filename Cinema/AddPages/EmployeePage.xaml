@@ -1,0 +1,85 @@
+﻿<Page x:Class="Cinema.AddPages.EmployeePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Cinema.AddPages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Cinema">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Фильмы"
+                   Grid.Column="2"
+                   Grid.ColumnSpan="6"
+                   VerticalAlignment="Center"
+                   FontSize="30"
+                   >
+            <TextBlock.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Orange" Offset="1"/>
+                    <GradientStop Color="Black"/>
+                </LinearGradientBrush>
+            </TextBlock.Foreground>
+        </TextBlock>
+
+        <DataGrid x:Name="FilmGrid" AutoGenerateColumns="False"  
+                  ItemsSource="{Binding Film}" Grid.Column="2"
+                  Grid.Row="1"
+                  Grid.RowSpan="7" Grid.ColumnSpan="6"
+                  BorderBrush="#666666">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding id_film}" Header="ID" />
+                <DataGridTextColumn Binding="{Binding Title}" Header="Название" />
+                <DataGridTextColumn Binding="{Binding Genre.Title}" Header="Жанр" />
+                <DataGridTextColumn Binding="{Binding Age.Title}" Header="Возраст" />
+                <DataGridTextColumn Binding="{Binding Price}" Header="Цена" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+
+        <Button Content="Добавить"
+                Foreground="#666666"
+                Background="Transparent"
+                Grid.ColumnSpan="2"
+                FontSize="16"
+                FontFamily="Cascadia Code"
+                BorderBrush="#666666"
+                Width="180"
+                Height="30"
+                Click="AddFilm_btn_Click"/>
+
+        <Button Content="Редактировать"
+                Foreground="#666666"
+                Background="Transparent"
+                Grid.Row="1"
+                Grid.ColumnSpan="2"
+                FontSize="16"
+                FontFamily="Cascadia Code"
+                BorderBrush="#666666"
+                Width="180"
+                Height="30"/>
+
+    </Grid>
+</Page>
