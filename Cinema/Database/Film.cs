@@ -18,6 +18,7 @@ namespace Cinema.Database
         public Film()
         {
             this.Cheque = new HashSet<Cheque>();
+            this.Rent = new HashSet<Rent>();
         }
     
         public int id_film { get; set; }
@@ -25,10 +26,13 @@ namespace Cinema.Database
         public int id_genre { get; set; }
         public int id_age { get; set; }
         public double Price { get; set; }
+        public Nullable<bool> IsDelete { get; set; }
     
         public virtual Age Age { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Cheque> Cheque { get; set; }
         public virtual Genre Genre { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Rent> Rent { get; set; }
     }
 }

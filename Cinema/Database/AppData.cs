@@ -8,6 +8,6 @@ namespace Cinema.Database
 {
     public class AppData
     {
-        public static CinemaEntities cinemaBD = new CinemaEntities();
+        public static CinemaEntities5 cinemaBD = new CinemaEntities5();
     }
 }

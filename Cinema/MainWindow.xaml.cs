@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,37 +21,41 @@ namespace Cinema
     /// </summary>
     public partial class MainWindow : Window
     {
+        Random rnd = new Random();
+        public string capcha ="";
         public MainWindow()
         {
             InitializeComponent();
+
             frame.Navigate(new AddPages.Autho());
         }
     }
 
+    public class Genres
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+    }
+
     public class Films
     {
-        public int Id { get; set; }
+        public int id_film { get; set; }
         public string Title { get; set; }
         public int AgeId { get; set; }
-        public Age Age { get; set; }
+        public Ages Age { get; set; }
         public int GenreId { get; set; }
-        public Genre Genre { get; set; }
+        public Genres Genre { get; set; }
+        public int Price { get; set; }
+        public bool IsDelete { get; set; }
     }
 
-
-    public class Genre
+    public class Ages
     {
         public int Id { get; set; }
         public string Title { get; set; }
     }
 
-    public class Age
-    {
-        public int Id { get; set; }
-        public string Title { get; set; }
-    }
-
-    public class Client
+    public class Clients
     {
         public int Id { get; set; }
         public string Lastname { get; set; }

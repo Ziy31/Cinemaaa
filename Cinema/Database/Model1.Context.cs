@@ -13,10 +13,10 @@ namespace Cinema.Database
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class CinemaEntities : DbContext
+    public partial class CinemaEntities5 : DbContext
     {
-        public CinemaEntities()
-            : base("name=CinemaEntities")
+        public CinemaEntities5()
+            : base("name=CinemaEntities5")
         {
         }
     
@@ -34,5 +34,6 @@ namespace Cinema.Database
         public virtual DbSet<Genre> Genre { get; set; }
         public virtual DbSet<Rent> Rent { get; set; }
         public virtual DbSet<Role> Role { get; set; }
+        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
     }
 }

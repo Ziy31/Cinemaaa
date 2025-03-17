@@ -25,10 +25,12 @@ namespace Cinema.Database
         public int id_client { get; set; }
         public int id_employee { get; set; }
         public System.DateTime DateOfDelivery { get; set; }
+        public Nullable<int> id_film { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Cheque> Cheque { get; set; }
         public virtual Client Client { get; set; }
         public virtual Employee Employee { get; set; }
+        public virtual Film Film { get; set; }
     }
 }

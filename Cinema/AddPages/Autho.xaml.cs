@@ -30,12 +30,12 @@ namespace Cinema.AddPages
         private void Autho_btn_Click(object sender, RoutedEventArgs e)
         {
             var CurrentUser = AppData.cinemaBD.Authorization.FirstOrDefault(u => u.Login == log_txb.Text && u.Password == pass_txb.Password);
-            
+
             if (CurrentUser != null)
             {
                 if (CurrentUser.id_role == 1)
                 {
-                    NavigationService.Navigate(new AddPages.EmployeePage());
+                    NavigationService.Navigate(new AddPages.AdminPage());
                 }
                 else if(CurrentUser.id_role == 2)
                 {

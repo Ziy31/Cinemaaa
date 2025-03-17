@@ -2,7 +2,6 @@
 using Cinema.Database;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -20,12 +19,12 @@ using System.Windows.Shapes;
 namespace Cinema.AddPages
 {
     /// <summary>
-    /// Логика взаимодействия для CashPage.xaml
+    /// Логика взаимодействия для AdminClientPage.xaml
     /// </summary>
-    public partial class CashPage : Page
+    public partial class AdminClientPage : Page
     {
-        public static List<Client> Clients {  get; set; }
-        public CashPage()
+        public static List<Client> Clients { get; set; }
+        public AdminClientPage()
         {
             InitializeComponent();
             Clients = new List<Client>(AppData.cinemaBD.Client.ToList());
@@ -50,7 +49,7 @@ namespace Cinema.AddPages
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            NavigationService.Navigate(new AdminPage());
         }
 
         private void cmbSortOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -80,10 +79,11 @@ namespace Cinema.AddPages
         {
             var set = (sender as Button).DataContext as Client;
             var editWindow = new EditClientWindow { DataContext = set };
-            if(editWindow.ShowDialog() == true)
+            if (editWindow.ShowDialog() == true)
             {
                 ClientsLv.ItemsSource = new List<Film>(AppData.cinemaBD.Film.Where(i => i.IsDelete == false).ToList());
             }
         }
+
     }
 }

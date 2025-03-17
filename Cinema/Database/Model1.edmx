@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Хранилище CinemaModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Хранилище CinemaModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Age">
           <Key>
             <PropertyRef Name="id" />
@@ -38,6 +38,7 @@
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Surname" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Phone" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsDelete" Type="bit" />
         </EntityType>
         <EntityType Name="Employee">
           <Key>
@@ -60,6 +61,7 @@
           <Property Name="id_genre" Type="int" Nullable="false" />
           <Property Name="id_age" Type="int" Nullable="false" />
           <Property Name="Price" Type="float" Nullable="false" />
+          <Property Name="IsDelete" Type="bit" />
         </EntityType>
         <EntityType Name="Genre">
           <Key>
@@ -77,6 +79,7 @@
           <Property Name="id_client" Type="int" Nullable="false" />
           <Property Name="id_employee" Type="int" Nullable="false" />
           <Property Name="DateOfDelivery" Type="date" Nullable="false" />
+          <Property Name="id_film" Type="int" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -84,6 +87,16 @@
           </Key>
           <Property Name="id_role" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Title" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
         <Association Name="FK_Authorization_Employee">
           <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
@@ -181,6 +194,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Rent_Film">
+          <End Role="Film" Type="Self.Film" Multiplicity="0..1" />
+          <End Role="Rent" Type="Self.Rent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Film">
+              <PropertyRef Name="id_film" />
+            </Principal>
+            <Dependent Role="Rent">
+              <PropertyRef Name="id_film" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="Хранилище CinemaModelContainer">
           <EntitySet Name="Age" EntityType="Self.Age" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Authorization" EntityType="Self.Authorization" Schema="dbo" store:Type="Tables" />
@@ -191,6 +216,7 @@
           <EntitySet Name="Genre" EntityType="Self.Genre" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Rent" EntityType="Self.Rent" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Authorization_Employee" Association="Self.FK_Authorization_Employee">
             <End Role="Employee" EntitySet="Employee" />
             <End Role="Authorization" EntitySet="Authorization" />
@@ -223,9 +249,12 @@
             <End Role="Employee" EntitySet="Employee" />
             <End Role="Rent" EntitySet="Rent" />
           </AssociationSet>
+          <AssociationSet Name="FK_Rent_Film" Association="Self.FK_Rent_Film">
+            <End Role="Film" EntitySet="Film" />
+            <End Role="Rent" EntitySet="Rent" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="CinemaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -266,6 +295,7 @@
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Surname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Phone" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="IsDelete" Type="Boolean" />
           <NavigationProperty Name="Rent" Relationship="Self.FK_Rent_Client" FromRole="Client" ToRole="Rent" />
         </EntityType>
         <EntityType Name="Employee">
@@ -292,9 +322,11 @@
           <Property Name="id_genre" Type="Int32" Nullable="false" />
           <Property Name="id_age" Type="Int32" Nullable="false" />
           <Property Name="Price" Type="Double" Nullable="false" />
+          <Property Name="IsDelete" Type="Boolean" />
           <NavigationProperty Name="Age" Relationship="Self.FK_Film_Age" FromRole="Film" ToRole="Age" />
           <NavigationProperty Name="Cheque" Relationship="Self.FK_Cheque_Film" FromRole="Film" ToRole="Cheque" />
           <NavigationProperty Name="Genre" Relationship="Self.FK_Film_Genre" FromRole="Film" ToRole="Genre" />
+          <NavigationProperty Name="Rent" Relationship="CinemaModel.FK_Rent_Film" FromRole="Film" ToRole="Rent" />
         </EntityType>
         <EntityType Name="Genre">
           <Key>
@@ -316,6 +348,8 @@
           <NavigationProperty Name="Cheque" Relationship="Self.FK_Cheque_Rent" FromRole="Rent" ToRole="Cheque" />
           <NavigationProperty Name="Client" Relationship="Self.FK_Rent_Client" FromRole="Rent" ToRole="Client" />
           <NavigationProperty Name="Employee" Relationship="Self.FK_Rent_Employee" FromRole="Rent" ToRole="Employee" />
+          <Property Name="id_film" Type="Int32" />
+          <NavigationProperty Name="Film" Relationship="CinemaModel.FK_Rent_Film" FromRole="Rent" ToRole="Film" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -324,6 +358,16 @@
           <Property Name="id_role" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Employee" Relationship="Self.FK_Employee_Role" FromRole="Role" ToRole="Employee" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <Association Name="FK_Film_Age">
           <End Role="Age" Type="Self.Age" Multiplicity="1" />
@@ -421,7 +465,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="CinemaEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="CinemaEntities5" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Age" EntityType="Self.Age" />
           <EntitySet Name="Authorization" EntityType="Self.Authorization" />
           <EntitySet Name="Cheque" EntityType="Self.Cheque" />
@@ -431,6 +475,7 @@
           <EntitySet Name="Genre" EntityType="Self.Genre" />
           <EntitySet Name="Rent" EntityType="Self.Rent" />
           <EntitySet Name="Role" EntityType="Self.Role" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
           <AssociationSet Name="FK_Film_Age" Association="Self.FK_Film_Age">
             <End Role="Age" EntitySet="Age" />
             <End Role="Film" EntitySet="Film" />
@@ -463,13 +508,29 @@
             <End Role="Genre" EntitySet="Genre" />
             <End Role="Film" EntitySet="Film" />
           </AssociationSet>
+          <AssociationSet Name="FK_Rent_Film" Association="CinemaModel.FK_Rent_Film">
+            <End Role="Film" EntitySet="Film" />
+            <End Role="Rent" EntitySet="Rent" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="FK_Rent_Film">
+          <End Type="CinemaModel.Film" Role="Film" Multiplicity="0..1" />
+          <End Type="CinemaModel.Rent" Role="Rent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Film">
+              <PropertyRef Name="id_film" />
+            </Principal>
+            <Dependent Role="Rent">
+              <PropertyRef Name="id_film" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Хранилище CinemaModelContainer" CdmEntityContainer="CinemaEntities">
+        <EntityContainerMapping StorageEntityContainer="Хранилище CinemaModelContainer" CdmEntityContainer="CinemaEntities5">
           <EntitySetMapping Name="Age">
             <EntityTypeMapping TypeName="CinemaModel.Age">
               <MappingFragment StoreEntitySet="Age">
@@ -505,6 +566,7 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Surname" ColumnName="Surname" />
                 <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -529,6 +591,7 @@
                 <ScalarProperty Name="id_genre" ColumnName="id_genre" />
                 <ScalarProperty Name="id_age" ColumnName="id_age" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -543,6 +606,7 @@
           <EntitySetMapping Name="Rent">
             <EntityTypeMapping TypeName="CinemaModel.Rent">
               <MappingFragment StoreEntitySet="Rent">
+                <ScalarProperty Name="id_film" ColumnName="id_film" />
                 <ScalarProperty Name="id_rent" ColumnName="id_rent" />
                 <ScalarProperty Name="DateOfIssue" ColumnName="DateOfIssue" />
                 <ScalarProperty Name="id_client" ColumnName="id_client" />
@@ -556,6 +620,17 @@
               <MappingFragment StoreEntitySet="Role">
                 <ScalarProperty Name="id_role" ColumnName="id_role" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="CinemaModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

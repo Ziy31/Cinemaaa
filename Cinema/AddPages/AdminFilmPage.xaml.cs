@@ -1,6 +1,8 @@
 ﻿using Cinema.Database;
+using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,20 +14,18 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Word = Microsoft.Office.Interop.Word;
-using System.IO;
-using System.ComponentModel;
+using System.Windows.Shapes;
 
 namespace Cinema.AddPages
 {
     /// <summary>
-    /// Логика взаимодействия для EmployeePage.xaml
+    /// Логика взаимодействия для AdminFilmPage.xaml
     /// </summary>
-    public partial class EmployeePage : Page
+    public partial class AdminFilmPage : System.Windows.Controls.Page
     {
-        public static List<Film> Films {  get; set; }
-        public EmployeePage()
+        public static List<Film> Films { get; set; }
+        public AdminFilmPage()
         {
             InitializeComponent();
             Films = new List<Film>(AppData.cinemaBD.Film.ToList());
@@ -40,7 +40,6 @@ namespace Cinema.AddPages
         private void BtnExportToWord_Click(object sender, RoutedEventArgs e)
         {
             var allFilm = AppData.cinemaBD.Film.ToList();
-
             var application = new Word.Application();
 
             Word.Document document = application.Documents.Add();
@@ -70,15 +69,15 @@ namespace Cinema.AddPages
                 paymentsTable.Rows[1].Range.Bold = 1;
                 paymentsTable.Rows[1].Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
 
-                for(int i = 0; i < allFilm.Count(); i++)
+                for (int i = 0; i < allFilm.Count(); i++)
                 {
                     var currentFilm = allFilm[i];
 
-                    cellRange = paymentsTable.Cell(i+1, 1).Range;
+                    cellRange = paymentsTable.Cell(i + 1, 1).Range;
                     cellRange.Text = currentFilm.Title;
                 }
 
-                if(user!=allFilm.LastOrDefault())
+                if (user != allFilm.LastOrDefault())
                 {
                     document.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
                 }
@@ -92,7 +91,7 @@ namespace Cinema.AddPages
         private void DeleteBtn_Click(object sender, RoutedEventArgs e)
         {
             var ser = (sender as Button).DataContext as Film;
-            if(MessageBox.Show($"Вы действительно хотите удалить фильм {ser.Title}?", "Подтверждение удаления", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (MessageBox.Show($"Вы действительно хотите удалить фильм {ser.Title}?", "Подтверждение удаления", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 ser.IsDelete = true;
                 AppData.cinemaBD.SaveChanges();
@@ -102,7 +101,7 @@ namespace Cinema.AddPages
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.GoBack();
+            NavigationService.Navigate(new AdminPage());
         }
 
         private void cmbSortOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -133,5 +132,6 @@ namespace Cinema.AddPages
                 }
             }
         }
+
     }
 }
